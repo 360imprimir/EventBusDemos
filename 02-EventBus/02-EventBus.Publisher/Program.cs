@@ -1,15 +1,14 @@
-﻿using _00_Contract;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using _00_Contract;
 using BinarySubject.Library.EventBus.Abstractions;
 using BinarySubject.Library.EventBus.Configuration.Abstractions;
 using BinarySubject.Library.EventBus.Configuration.Abstractions.Builder;
 using BinarySubject.Library.EventBus.RabbitMq.Configuration;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace _02_EventBus.Publisher
 {
@@ -23,20 +22,17 @@ namespace _02_EventBus.Publisher
                             .CreateLogger();
 
             var host = new HostBuilder()
-                .ConfigureHostConfiguration(configHost =>
-                {
-                    configHost.AddEnvironmentVariables();
-                })
                 .ConfigureServices((hostContext, services) =>
                     services.AddRabbitMqEventBus(
-                    hostContext.HostingEnvironment.EnvironmentName,
-                    "amqp://localhost/",
-                    new RabbitMqManagementApiOptions(new Uri("http://localhost:15672/api")),
-                    o =>
-                    o.AddPublisher(PublisherInfo.Name, p =>
-                        p.RegisterEvent<OrderCancelled>()
+                        hostContext.HostingEnvironment.EnvironmentName,
+                        "amqp://localhost/",
+                        new RabbitMqManagementApiOptions(new Uri("http://localhost:15672/api")),
+                        o =>
+                        o.AddPublisher(PublisherInfo.Name, p =>
+                            p.RegisterEvent<OrderCancelled>()
+                        )
                     )
-                )).Build();
+                ).Build();
 
             var eventPublisher = host.Services.GetService<IEventPublisher>();
 

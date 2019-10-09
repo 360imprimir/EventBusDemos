@@ -1,12 +1,12 @@
-﻿using _00_Contract;
+﻿using System;
+using System.Threading.Tasks;
+using _00_Contract;
 using _05_EventBus.SerialSubscriber.EventHandlers;
 using BinarySubject.Library.EventBus.Configuration.Abstractions;
 using BinarySubject.Library.EventBus.Configuration.Abstractions.Builder;
 using BinarySubject.Library.EventBus.RabbitMq.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Threading.Tasks;
 
 namespace _05_EventBus.SerialSubscriber
 {
@@ -27,7 +27,7 @@ namespace _05_EventBus.SerialSubscriber
                     .AddSubscriber("SerialSubscriber", s => s
                         .UseConcurrencyLimit(1)
                         .FromPublisher(PublisherInfo.Name, p =>
-                            p.RegisterEventSubscriptionsFromAssembly(typeof(PublisherInfo).Assembly)
+                            p.RegisterEventsSubscriptionsFromAssembly(typeof(PublisherInfo).Assembly)
                         )
                     )
                 );

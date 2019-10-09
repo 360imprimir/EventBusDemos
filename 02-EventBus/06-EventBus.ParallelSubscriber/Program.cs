@@ -1,13 +1,12 @@
-﻿using _00_Contract;
+﻿using System;
+using System.Threading.Tasks;
+using _00_Contract;
 using _06_EventBus.ParallelSubscriber.EventHandlers;
 using BinarySubject.Library.EventBus.Configuration.Abstractions;
 using BinarySubject.Library.EventBus.Configuration.Abstractions.Builder;
 using BinarySubject.Library.EventBus.RabbitMq.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Serilog;
-using System;
-using System.Threading.Tasks;
 
 namespace _06_EventBus.ParallelSubscriber
 {
@@ -15,11 +14,6 @@ namespace _06_EventBus.ParallelSubscriber
     {
         static async Task Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                            .MinimumLevel.Debug()
-                            .WriteTo.Console()
-                            .CreateLogger();
-
             await new HostBuilder()
             .ConfigureServices((hostContext, services) =>
             {
@@ -32,7 +26,7 @@ namespace _06_EventBus.ParallelSubscriber
                     o => o
                     .AddSubscriber("ParallelSubscriber", s => s
                         .FromPublisher(PublisherInfo.Name, p =>
-                            p.RegisterEventSubscriptionsFromAssembly(typeof(PublisherInfo).Assembly)
+                            p.RegisterEventsSubscriptionsFromAssembly(typeof(PublisherInfo).Assembly)
                         )
                     )
                 );

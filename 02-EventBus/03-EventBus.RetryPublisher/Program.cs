@@ -1,15 +1,14 @@
-﻿using _00_Contract;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using _00_Contract;
 using BinarySubject.Library.EventBus.Abstractions;
 using BinarySubject.Library.EventBus.Configuration.Abstractions;
 using BinarySubject.Library.EventBus.Configuration.Abstractions.Builder;
 using BinarySubject.Library.EventBus.RabbitMq.Configuration;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace _03_EventBus.RetryPublisher
 {
@@ -23,24 +22,21 @@ namespace _03_EventBus.RetryPublisher
                             .CreateLogger();
 
             var host = new HostBuilder()
-                .ConfigureHostConfiguration(configHost =>
-                {
-                    configHost.AddEnvironmentVariables();
-                })
                 .ConfigureServices((hostContext, services) =>
                     services.AddRabbitMqEventBus(
-                    hostContext.HostingEnvironment.EnvironmentName,
-                    "amqp://localhost/",
-                    new RabbitMqManagementApiOptions(new Uri("http://localhost:15672/api")),
-                    o =>
-                    o.AddPublisher(PublisherInfo.Name, p =>
-                        p
-                        .UseBrokerResiliencePolicy(bpb =>
-                            bpb.WaitAndRetryForever(ct => TimeSpan.FromSeconds(1))
+                        hostContext.HostingEnvironment.EnvironmentName,
+                        "amqp://localhost/",
+                        new RabbitMqManagementApiOptions(new Uri("http://localhost:15672/api")),
+                        o =>
+                        o.AddPublisher(PublisherInfo.Name, p =>
+                            p
+                            .UseBrokerResiliencePolicy(bpb =>
+                                bpb.WaitAndRetryForever(ct => TimeSpan.FromSeconds(1))
+                            )
+                            .RegisterEvent<OrderCancelled>()
                         )
-                        .RegisterEvent<OrderCancelled>()
                     )
-                )).Build();
+                ).Build();
 
             var eventPublisher = host.Services.GetService<IEventPublisher>();
 

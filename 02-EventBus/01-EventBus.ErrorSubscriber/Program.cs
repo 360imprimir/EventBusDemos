@@ -1,4 +1,6 @@
-﻿using _00_Contract;
+﻿using System;
+using System.Threading.Tasks;
+using _00_Contract;
 using _01_EventBus.ErrorSubscriber.EventHandlers;
 using BinarySubject.Library.EventBus.Configuration.Abstractions;
 using BinarySubject.Library.EventBus.Configuration.Abstractions.Builder;
@@ -6,8 +8,6 @@ using BinarySubject.Library.EventBus.RabbitMq.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using System;
-using System.Threading.Tasks;
 
 namespace _01_EventBus.ErrorSubscriber
 {
@@ -36,7 +36,7 @@ namespace _01_EventBus.ErrorSubscriber
                         )
                         .UseConcurrencyLimit(1)
                         .FromPublisher(PublisherInfo.Name, p =>
-                            p.RegisterEventSubscriptionsFromAssembly(typeof(PublisherInfo).Assembly)
+                            p.RegisterEventsSubscriptionsFromAssembly(typeof(PublisherInfo).Assembly)
                         )
                     )
                 );

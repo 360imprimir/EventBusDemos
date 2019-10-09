@@ -1,8 +1,8 @@
-﻿using _00_Contract;
-using BinarySubject.Library.EventBus.Abstractions;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using _00_Contract;
+using BinarySubject.Library.EventBus.Abstractions;
 
 namespace _05_EventBus.SerialSubscriber.EventHandlers
 {
@@ -13,7 +13,7 @@ namespace _05_EventBus.SerialSubscriber.EventHandlers
         public Task Handle(OrderCancelled @event, CancellationToken cancellationToken)
         {
             var currCount = Interlocked.Increment(ref count);
-            Console.WriteLine($"Processing event number: {currCount}");
+            Console.WriteLine($"[{DateTime.Now}]Processing event number: {currCount}");
 
             return Task.Delay(1000);
         }

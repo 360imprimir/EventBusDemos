@@ -1,0 +1,16 @@
+version: '2.2'
+
+services:
+
+  rabbitmq:
+   image: rabbitmq:3.6.5-management
+   container_name: rabbitmq
+   hostname: rabbitmq
+   ports:
+    - "5672:5672"
+    - "15672:15672"
+   volumes:
+    - rabbitmq-data:/var/lib/rabbitmq
+
+volumes:
+  rabbitmq-data:

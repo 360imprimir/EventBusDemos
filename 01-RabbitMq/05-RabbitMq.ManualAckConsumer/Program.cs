@@ -1,5 +1,5 @@
-﻿using RabbitMQ.Client;
-using System;
+﻿using System;
+using RabbitMQ.Client;
 using static _00_TopologyDefinition.DemoTopology;
 
 namespace _05_RabbitMq.ManualAckConsumer
